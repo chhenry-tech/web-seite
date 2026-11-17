@@ -1,0 +1,465 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Freds Pi-Projekte</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: ein ruhiger Lesestrang mit Sprungmarken oben; Grundlagen zuerst, Projekte als aufklappbare Steckbriefe, Fehlerhilfe am Ende. */
+:root {
+  --bg: #eef2ef;
+  --surface: #f9fbfa;
+  --fg: #14211c;
+  --muted: #53635b;
+  --line: #cfd9d3;
+  --accent: #b81848;
+  --accent-ink: #ffffff;
+  --code-bg: #14211c;
+  --code-fg: #e6f1ea;
+  --ok: #17724a;
+  --ok-bg: #d6efe1;
+  --wip: #8a5a00;
+  --wip-bg: #fbe9c2;
+  --plan: #3d5a80;
+  --plan-bg: #dbe6f4;
+  --done: #6b3a8c;
+  --done-bg: #ebdcf5;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1613; --surface: #16211c; --fg: #e4efe9; --muted: #9db0a6; --line: #28372f;
+    --accent: #ff6b95; --accent-ink: #1a0610; --code-bg: #070c0a; --code-fg: #d7e8de;
+    --ok: #6fdba5; --ok-bg: #17372a; --wip: #f2c261; --wip-bg: #3a2c0d;
+    --plan: #9fc0ee; --plan-bg: #1b2d45; --done: #d7b0f0; --done-bg: #35213f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1613; --surface: #16211c; --fg: #e4efe9; --muted: #9db0a6; --line: #28372f;
+  --accent: #ff6b95; --accent-ink: #1a0610; --code-bg: #070c0a; --code-fg: #d7e8de;
+  --ok: #6fdba5; --ok-bg: #17372a; --wip: #f2c261; --wip-bg: #3a2c0d;
+  --plan: #9fc0ee; --plan-bg: #1b2d45; --done: #d7b0f0; --done-bg: #35213f;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.65;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 30; background: var(--surface);
+}
+.wrap {
+  max-width: 880px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+p { margin: 0 0 12px; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+/* Navigation */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; gap: 6px 18px; align-items: center; flex-wrap: wrap; padding-block: 10px; }
+.brand { font-family: var(--font-display); font-weight: 700; margin-right: auto; }
+.nav a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; }
+.nav a:hover { color: var(--fg); }
+
+/* Kopf */
+.hero { padding-block: 44px 28px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.hero h1 { font-size: clamp(2rem, 6vw, 3.2rem); font-weight: 700; max-width: 16ch; }
+.hero p.lead { font-size: 18px; color: var(--muted); max-width: 56ch; margin-top: 16px; }
+
+section { padding-block: 32px; }
+section > .wrap > h2 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; margin-bottom: 8px; }
+.sub { color: var(--muted); max-width: 62ch; margin-bottom: 22px; }
+
+/* Grundlagen */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; min-width: 0; }
+.panel h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.panel p:last-child, .panel ul:last-child { margin-bottom: 0; }
+ul.tight { margin: 0; padding-left: 20px; }
+ul.tight li { margin-bottom: 4px; }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 15px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--font-display); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+
+ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; gap: 10px; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+ol.steps li::before { content: counter(s); font-family: var(--font-mono); font-weight: 500; color: var(--accent-ink); background: var(--accent); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; }
+ol.steps li div { min-width: 0; }
+
+/* Befehle */
+.cmds { display: grid; gap: 10px; }
+.cmd { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; background: var(--code-bg); color: var(--code-fg); border-radius: 10px; padding: 10px 10px 10px 14px; }
+.cmd code { font-family: var(--font-mono); font-size: 14px; overflow-x: auto; white-space: nowrap; padding-block: 2px; }
+.cmd small { grid-column: 1 / -1; color: var(--muted); font-size: 13px; }
+.cmd .copy { font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--line); background: transparent; color: var(--code-fg); border-radius: 6px; padding: 5px 10px; }
+.cmd .copy:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.cmd small { color: #9db0a6; }
+
+/* Glossar */
+dl.gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px 14px; margin: 0; }
+dl.gloss div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; min-width: 0; }
+dl.gloss dt { font-family: var(--font-display); font-weight: 700; }
+dl.gloss dd { margin: 2px 0 0; color: var(--muted); font-size: 15px; }
+
+/* Projekte */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.filters button { font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; }
+.filters button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.projects { display: grid; gap: 12px; }
+details.proj { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+details.proj[hidden] { display: none; }
+details.proj summary { list-style: none; cursor: pointer; padding: 16px 18px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; }
+details.proj summary::-webkit-details-marker { display: none; }
+details.proj summary h3 { font-size: 1.15rem; }
+details.proj summary .one { grid-column: 1 / -1; color: var(--muted); font-size: 15px; }
+details.proj summary::after { content: "+"; grid-column: 2; grid-row: 1; justify-self: end; display: none; }
+.chip { font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 999px; white-space: nowrap; align-self: start; }
+.chip.ok { color: var(--ok); background: var(--ok-bg); }
+.chip.wip { color: var(--wip); background: var(--wip-bg); }
+.chip.plan { color: var(--plan); background: var(--plan-bg); }
+.chip.done { color: var(--done); background: var(--done-bg); }
+.body { padding: 0 18px 18px; display: grid; gap: 14px; border-top: 1px solid var(--line); padding-top: 16px; }
+.body h4 { font-family: var(--font-display); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+.body ul { margin: 0; padding-left: 20px; }
+.body li { margin-bottom: 3px; }
+.body p { margin: 0; }
+details.proj[open] summary { padding-bottom: 12px; }
+.hint { font-size: 14px; color: var(--muted); border-left: 3px solid var(--accent); padding-left: 12px; }
+
+.warn { background: var(--wip-bg); color: var(--fg); border-radius: 10px; padding: 12px 16px; margin-bottom: 14px; }
+
+footer { padding-block: 30px 48px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); margin-top: 24px; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<nav class="nav" aria-label="Seitenmenü">
+  <div class="wrap">
+    <span class="brand">Pi-Projekte</span>
+    <a href="#basics">Grundlagen</a>
+    <a href="#befehle">Befehle</a>
+    <a href="#projekte">Projekte</a>
+    <a href="#hilfe">Probleme lösen</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Raspberry Pi · Hamburg</div>
+    <h1>Alles, was auf meinem Pi läuft</h1>
+    <p class="lead">Erst die Grundlagen, damit jeder einsteigen kann. Danach alle Projekte mit Stand, Technik und den nächsten Schritten.</p>
+  </div>
+</header>
+
+<main>
+<section id="basics">
+  <div class="wrap">
+    <h2>Grundlagen</h2>
+    <p class="sub">Ein Raspberry Pi ist ein kompletter Mini-Computer in Kreditkartengröße. Er braucht wenig Strom und läuft rund um die Uhr. Darum eignet er sich für Server, Bots und Mediaboxen.</p>
+
+    <div class="grid">
+      <div class="panel">
+        <h3>Was ist drauf?</h3>
+        <p>Prozessor, Arbeitsspeicher, USB, LAN, HDMI und eine Pinleiste (GPIO) für Sensoren und Bastelprojekte. Als „Festplatte“ dient eine microSD-Karte oder eine SSD.</p>
+      </div>
+      <div class="panel">
+        <h3>Was brauche ich?</h3>
+        <ul class="tight">
+          <li>Raspberry Pi (4 oder 5)</li>
+          <li>microSD-Karte, mindestens 32 GB</li>
+          <li>Original-Netzteil (Pi 5: USB-C mit 5 V / 5 A)</li>
+          <li>LAN-Kabel oder WLAN</li>
+          <li>Zum Einrichten: einen PC mit Kartenleser</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Wofür taugt er?</h3>
+        <p>Heimserver (Nextcloud), kleine KI-Modelle, Mediabox, Bots, Webserver, Telefonanlage, Smart-Home. Nicht für schwere Spiele oder große KI-Modelle.</p>
+      </div>
+    </div>
+
+    <h3 style="margin: 28px 0 10px;">Pi 4 oder Pi 5?</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Merkmal</th><th>Raspberry Pi 4</th><th>Raspberry Pi 5</th></tr></thead>
+        <tbody>
+          <tr><td>Arbeitsspeicher</td><td>1 bis 8 GB</td><td>2 bis 16 GB</td></tr>
+          <tr><td>Tempo</td><td>gut für Server und Bots</td><td>deutlich schneller, auch für kleine KI-Modelle</td></tr>
+          <tr><td>Strom</td><td>USB-C, 5 V / 3 A</td><td>USB-C, 5 V / 5 A</td></tr>
+          <tr><td>Bildschirm</td><td>2× micro-HDMI</td><td>2× micro-HDMI</td></tr>
+          <tr><td>Gut für</td><td>Anrufbeantworter, Bots, Webseiten</td><td>Shop, KI, Mediabox, SSD-Server</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin: 28px 0 10px;">Einrichten in 6 Schritten</h3>
+    <ol class="steps">
+      <li><div><strong>Raspberry Pi Imager installieren.</strong> Das Programm gibt es kostenlos auf raspberrypi.com/software.</div></li>
+      <li><div><strong>Gerät und System wählen.</strong> Für Server und Bots: „Raspberry Pi OS Lite (64-bit)“. Das hat keine Oberfläche und spart Leistung.</div></li>
+      <li><div><strong>microSD-Karte auswählen.</strong> Achtung: Alles auf der Karte wird gelöscht.</div></li>
+      <li><div><strong>Einstellungen eintragen.</strong> Hostname, Benutzername, Passwort, WLAN und „SSH aktivieren“. Dann musst du keinen Bildschirm anschließen.</div></li>
+      <li><div><strong>Schreiben, Karte in den Pi, Strom anschließen.</strong> Nach etwa einer Minute ist er im Netzwerk.</div></li>
+      <li><div><strong>Per SSH verbinden.</strong> Auf dem PC im Terminal: <code>ssh BENUTZER@raspberrypi.local</code> und das Passwort eingeben.</div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="befehle">
+  <div class="wrap">
+    <h2>Wichtige Befehle</h2>
+    <p class="sub">Diese Befehle tippst du auf dem Pi im Terminal. Mit „Kopieren“ landen sie in der Zwischenablage.</p>
+    <div class="cmds">
+      <div class="cmd"><code>sudo apt update &amp;&amp; sudo apt full-upgrade -y</code><button class="copy" type="button">Kopieren</button><small>System auf den neuesten Stand bringen. Danach neu starten.</small></div>
+      <div class="cmd"><code>hostname -I</code><button class="copy" type="button">Kopieren</button><small>Zeigt die IP-Adresse des Pi im Netzwerk.</small></div>
+      <div class="cmd"><code>free -h</code><button class="copy" type="button">Kopieren</button><small>Zeigt, wie viel Arbeitsspeicher frei ist. Wichtig für KI-Modelle.</small></div>
+      <div class="cmd"><code>df -h</code><button class="copy" type="button">Kopieren</button><small>Zeigt, wie voll SD-Karte und Festplatten sind.</small></div>
+      <div class="cmd"><code>vcgencmd measure_temp</code><button class="copy" type="button">Kopieren</button><small>Temperatur des Prozessors. Ab etwa 80 °C drosselt der Pi.</small></div>
+      <div class="cmd"><code>systemctl status apache2</code><button class="copy" type="button">Kopieren</button><small>Prüft, ob ein Dienst läuft, hier der Webserver von Nextcloud.</small></div>
+      <div class="cmd"><code>journalctl -u apache2 -n 50</code><button class="copy" type="button">Kopieren</button><small>Die letzten 50 Logzeilen eines Dienstes. Hilft bei der Fehlersuche.</small></div>
+      <div class="cmd"><code>sudo reboot</code><button class="copy" type="button">Kopieren</button><small>Neustart. Zum Ausschalten: <b>sudo shutdown now</b>, nie einfach den Strom ziehen.</small></div>
+    </div>
+
+    <h3 style="margin: 28px 0 10px;">Begriffe kurz erklärt</h3>
+    <dl class="gloss">
+      <div><dt>SSH</dt><dd>Fernzugriff auf das Terminal des Pi von einem anderen Rechner aus.</dd></div>
+      <div><dt>Raspberry Pi OS Lite</dt><dd>Das Betriebssystem ohne Desktop. Bedienung nur über Text-Befehle.</dd></div>
+      <div><dt>Nextcloud</dt><dd>Eigene Cloud für Dateien, ähnlich wie Dropbox, aber auf deiner Hardware.</dd></div>
+      <div><dt>Tailscale</dt><dd>Privates Netzwerk, mit dem du von unterwegs sicher auf den Pi zugreifst.</dd></div>
+      <div><dt>Ollama</dt><dd>Programm, das kleine KI-Sprachmodelle lokal auf dem Pi startet.</dd></div>
+      <div><dt>Whisper</dt><dd>KI, die gesprochene Sprache in Text umwandelt. Läuft auch offline.</dd></div>
+      <div><dt>Asterisk</dt><dd>Software, die aus dem Pi eine Telefonanlage macht.</dd></div>
+      <div><dt>UxPlay</dt><dd>Empfängt das gespiegelte iPhone-Bild auf dem Pi, wie ein Apple TV.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section id="projekte">
+  <div class="wrap">
+    <h2>Meine Projekte</h2>
+    <p class="sub">Tippe auf ein Projekt, um alle Details zu lesen. Mit den Filtern siehst du nur, was schon läuft oder noch geplant ist.</p>
+
+    <div class="filters" role="group" aria-label="Projekte filtern">
+      <button type="button" data-f="all" aria-pressed="true">Alle</button>
+      <button type="button" data-f="ok" aria-pressed="false">Läuft</button>
+      <button type="button" data-f="wip" aria-pressed="false">In Arbeit</button>
+      <button type="button" data-f="plan" aria-pressed="false">Geplant</button>
+      <button type="button" data-f="done" aria-pressed="false">Fertig</button>
+    </div>
+
+    <div class="projects" id="list">
+
+      <details class="proj" data-s="ok" open>
+        <summary><h3>Nextcloud-Heimserver</h3><span class="chip ok">Läuft</span><span class="one">Eigene Cloud zu Hause, erreichbar von überall.</span></summary>
+        <div class="body">
+          <div><h4>Ziel</h4><p>Dateien und Backups auf eigener Hardware speichern statt bei einem fremden Anbieter.</p></div>
+          <div><h4>Technik</h4><ul>
+            <li>Apache-Webserver und MariaDB-Datenbank</li>
+            <li>Datenordner auf einer externen 232-GB-Festplatte</li>
+            <li>Tailscale für den Zugriff von unterwegs</li>
+          </ul></div>
+          <div><h4>Stand und nächste Schritte</h4><ul>
+            <li>Nextcloud läuft und ist auch über Tailscale erreichbar</li>
+            <li>Zwei weitere Benutzer sollen angelegt werden</li>
+            <li>Ordner vom PC sollen automatisch als Backup hochgeladen werden</li>
+          </ul></div>
+        </div>
+      </details>
+
+      <details class="proj" data-s="wip">
+        <summary><h3>Apple-TV-Ersatz für den Urlaub</h3><span class="chip wip">In Arbeit</span><span class="one">Streaming-Box auf dem Pi, die ich mitnehmen kann.</span></summary>
+        <div class="body">
+          <div><h4>Ziel</h4><p>Ein eigener Apple-TV-Nachbau mit iPhone-Spiegelung und einer Startseite für alle Streamingdienste.</p></div>
+          <div><h4>Stand</h4><ul>
+            <li>Spiegeln vom iPhone funktioniert (UxPlay)</li>
+            <li>System auf Raspberry Pi OS ohne Desktop umgestellt</li>
+            <li>Läuft auf demselben Pi wie Nextcloud, ohne zweite SD-Karte</li>
+          </ul></div>
+          <div><h4>Als Nächstes: das TV-Board</h4>
+            <p>Eine Startseite, nur mit Maus bedienbar, mit Kacheln für:</p>
+            <ul>
+              <li>Netflix, Prime Video, YouTube, ARD Mediathek</li>
+              <li>Knopf für die neueste Tagesschau von 20 Uhr</li>
+              <li>Uhrzeit, Wetter, Temperatur und BTC-Kurs</li>
+              <li>TradingView und eine Kachel für Computerteile</li>
+            </ul>
+            <p style="margin-top:8px">Kodi und weitere Funktionen kommen später.</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="proj" data-s="wip">
+        <summary><h3>KI-Chat auf dem Pi</h3><span class="chip wip">In Arbeit</span><span class="one">Ein lokales Sprachmodell, mit dem ich und Freunde schreiben können.</span></summary>
+        <div class="body">
+          <div><h4>Ziel</h4><p>Von überall mit der KI auf dem Pi chatten, ohne Cloud-Abo.</p></div>
+          <div><h4>Technik</h4><ul>
+            <li>Raspberry Pi mit 4 GB RAM, 64-Bit-System</li>
+            <li>Ollama ist installiert, vorgesehenes Modell: qwen3:1.7b</li>
+          </ul></div>
+          <div><h4>Idee für den Zugang</h4><ul>
+            <li>Kleine Web-App im öffentlichen Internet, auch für Freunde</li>
+            <li>Oder zusätzlich ein Telegram-Bot</li>
+          </ul></div>
+          <p class="hint">Mit 4 GB RAM passen nur kleine Modelle. Prüfe vorher mit <code>free -h</code>, wie viel Speicher frei ist.</p>
+        </div>
+      </details>
+
+      <details class="proj" data-s="plan">
+        <summary><h3>Bitcoin-Signalbot</h3><span class="chip plan">Geplant</span><span class="one">Python-Script, das rund um die Uhr läuft und per Discord meldet.</span></summary>
+        <div class="body">
+          <div><h4>Ziel</h4><p>Bitcoin bewerten und Kauf- und Verkaufssignale an Discord schicken. Aktien eventuell später.</p></div>
+          <div><h4>Was das Script einbeziehen soll</h4><ul>
+            <li>Mehrere Indikatoren</li>
+            <li>Kursschwankungen zwischen Unterstützungs- und Widerstandslinien</li>
+            <li>Historische Ähnlichkeiten im Kurs</li>
+            <li>Ereignisse wie den Ukraine-Krieg und den Ölpreis</li>
+          </ul></div>
+          <div><h4>Wichtig</h4><p>Der Code soll fehlerfrei sein. Die Charts prüfe ich weiterhin selbst. Signale sind keine Anlageberatung.</p></div>
+        </div>
+      </details>
+
+      <details class="proj" data-s="plan">
+        <summary><h3>Anrufbeantworter mit E-Mail</h3><span class="chip plan">Geplant</span><span class="one">Anrufe aufnehmen, in Text umwandeln, als Mail zustellen.</span></summary>
+        <div class="body">
+          <div><h4>Ziel</h4><p>Ich muss nicht mehr selbst telefonieren. Der Anrufer nennt Anliegen, Name und Adresse. Ich bekomme eine E-Mail. Keine laufenden Kosten.</p></div>
+          <div><h4>Ablauf</h4><p>Anruf, Ansage, Aufnahme, Whisper macht Text daraus, E-Mail geht raus, Aufnahme wird gelöscht.</p></div>
+          <div><h4>Technik</h4><ul>
+            <li>Raspberry Pi 4 mit Raspberry Pi OS Lite</li>
+            <li>Asterisk, der Pi hängt als IP-Telefon an der Fritzbox</li>
+            <li>whisper.cpp für die Spracherkennung</li>
+            <li>msmtp zum Versenden der E-Mail</li>
+          </ul></div>
+          <div><h4>Noch offen</h4><ul>
+            <li>Welches Fritzbox-Modell</li>
+            <li>Wie viel RAM der Pi 4 hat</li>
+            <li>Welcher E-Mail-Anbieter</li>
+          </ul></div>
+        </div>
+      </details>
+
+      <details class="proj" data-s="plan">
+        <summary><h3>Online-Shop für PC-Teile</h3><span class="chip plan">Geplant</span><span class="one">Alte PC-Teile aufbereiten und über einen Shop auf dem Pi 5 verkaufen.</span></summary>
+        <div class="body">
+          <div><h4>Idee</h4><p>Firmen werden gefragt, ob es PC-Teile zum kostenlosen Abholen gibt. Die Teile werden mit Druckluft gereinigt, fotografiert und verkauft.</p></div>
+          <div><h4>Technik</h4><ul>
+            <li>Shop läuft auf einem Raspberry Pi 5</li>
+            <li>Der Code wird mit Codex erstellt, der Prompt dafür ist fertig</li>
+            <li>Kommunikation per E-Mail, Gebote werden per Bestätigungslink gültig</li>
+          </ul></div>
+          <div><h4>Preise und Werbung</h4><ul>
+            <li>Start-Gebot pro Teil: 5 €</li>
+            <li>Ziel: etwa 400 € Umsatz im Monat bei rund 200 Teilen</li>
+            <li>Bezahlung per PayPal, Überweisung oder bar</li>
+            <li>Werbung über Kleinanzeigen und Zettel in der Nachbarschaft</li>
+          </ul></div>
+        </div>
+      </details>
+
+      <details class="proj" data-s="done">
+        <summary><h3>Modulares Pi-5-Gehäuse</h3><span class="chip done">Fertig</span><span class="one">3D-gedruckt, stapelbar wie ein kleiner Homeserver.</span></summary>
+        <div class="body">
+          <div><h4>Aufbau</h4><p>Vier Teile übereinander: Akku, 2,5-Zoll-SSD, Pi 5 und Deckel. Neue Module lassen sich nachdrucken und oben ergänzen.</p></div>
+          <div><h4>Eigenschaften der 5. Version</h4><ul>
+            <li>Waben-Böden gegen Hitze und für weniger Filament</li>
+            <li>Deckel 4 mm dick, Standardhöhe pro Modul 89 mm</li>
+            <li>Außen nur LAN, USB, USB-C und micro-HDMI</li>
+            <li>SSD-Kabel laufen innen zum Pi</li>
+            <li>Schraublöcher zum Festschrauben</li>
+          </ul></div>
+          <div><h4>Ergebnis</h4><p>Alle Maße wurden geprüft und passen.</p></div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<section id="hilfe">
+  <div class="wrap">
+    <h2>Probleme lösen</h2>
+    <h3 style="font-size:1.15rem; margin: 16px 0 6px;">SD-Karte lässt sich nicht beschreiben</h3>
+    <p class="sub">Der Imager meldet „Zugriff verweigert“ oder „Fehler beim Schreiben“, obwohl der Schreibschutz aus ist. Das hilft unter Windows:</p>
+    <div class="warn"><strong>Vorsicht:</strong> Wähle unbedingt die SD-Karte aus, nicht die Systemplatte. <b>clean</b> löscht alles auf dem gewählten Datenträger.</div>
+    <ol class="steps">
+      <li><div>Eingabeaufforderung <strong>als Administrator</strong> öffnen.
+        <div class="cmds" style="margin-top:8px"><div class="cmd"><code>diskpart</code><button class="copy" type="button">Kopieren</button></div></div></div></li>
+      <li><div>Alle Datenträger anzeigen und die Nummer der SD-Karte merken (an der Größe erkennbar, z. B. 29 GB).
+        <div class="cmds" style="margin-top:8px"><div class="cmd"><code>list disk</code><button class="copy" type="button">Kopieren</button></div></div></div></li>
+      <li><div>Die Karte auswählen. Statt der 2 deine Nummer einsetzen.
+        <div class="cmds" style="margin-top:8px"><div class="cmd"><code>select disk 2</code><button class="copy" type="button">Kopieren</button></div></div></div></li>
+      <li><div>Kontrolle, ob es wirklich die richtige Karte ist.
+        <div class="cmds" style="margin-top:8px"><div class="cmd"><code>detail disk</code><button class="copy" type="button">Kopieren</button></div></div></div></li>
+      <li><div>Karte komplett leeren.
+        <div class="cmds" style="margin-top:8px"><div class="cmd"><code>clean</code><button class="copy" type="button">Kopieren</button></div></div></div></li>
+      <li><div>Diskpart beenden, den Imager neu starten und erneut schreiben.
+        <div class="cmds" style="margin-top:8px"><div class="cmd"><code>exit</code><button class="copy" type="button">Kopieren</button></div></div></div></li>
+    </ol>
+
+    <h3 style="font-size:1.15rem; margin: 28px 0 10px;">Weitere typische Fehler</h3>
+    <div class="grid">
+      <div class="panel"><h3>Pi nicht im Netzwerk</h3><p>LAN-Kabel testen, nach dem Start eine Minute warten. Im Router nach „raspberrypi“ suchen und die IP-Adresse direkt für SSH nutzen.</p></div>
+      <div class="panel"><h3>Pi startet nicht</h3><p>Meist ein schwaches Netzteil. Original-Netzteil nehmen. Danach die SD-Karte neu beschreiben.</p></div>
+      <div class="panel"><h3>Alles wird langsam</h3><p>Mit <code>free -h</code> den Speicher und mit <code>vcgencmd measure_temp</code> die Temperatur prüfen. Bei Hitze hilft ein Lüfter oder ein Gehäuse mit Luftlöchern.</p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">Stand: 17. November 2026. Die Seite wächst mit jedem Projekt.</div>
+</footer>
+
+<script>
+(function () {
+  // Kopieren-Knöpfe
+  document.querySelectorAll('.cmd .copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.parentElement.querySelector('code');
+      var text = code ? code.textContent : '';
+      function done(ok) {
+        btn.textContent = ok ? 'Kopiert' : 'Markiert';
+        setTimeout(function () { btn.textContent = 'Kopieren'; }, 1600);
+      }
+      function fallback() {
+        try {
+          var r = document.createRange(); r.selectNodeContents(code);
+          var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        } catch (e) {}
+        done(false);
+      }
+      try {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
+      } catch (e) { fallback(); }
+    });
+  });
+
+  // Projektfilter
+  var buttons = document.querySelectorAll('.filters button');
+  var items = document.querySelectorAll('#list details.proj');
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-f');
+      buttons.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      items.forEach(function (d) { d.hidden = !(f === 'all' || d.getAttribute('data-s') === f); });
+    });
+  });
+})();
+</script>
+
+</body></html>
